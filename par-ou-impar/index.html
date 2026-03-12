@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jogo de Par ou Ímpar</title>
+    <style>
+        /* CSS - Design do Jogo */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #1a1a2e;
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            background-color: #16213e;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            text-align: center;
+            width: 320px;
+        }
+
+        input, select, button {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border: none;
+            font-size: 1rem;
+        }
+
+        button {
+            background-color: #e94560;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        button:hover {
+            background-color: #ff2e63;
+        }
+
+        .resultado-box {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 8px;
+            background-color: #0f3460;
+            display: none; /* Escondido até jogar */
+        }
+
+        .vitoria { color: #4ecca3; font-weight: bold; }
+        .derrota { color: #e94560; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Par ou Ímpar?</h2>
+    
+    <label>Escolha o seu lado:</label>
+    <select id="escolha">
+        <option value="par">Par</option>
+        <option value="impar">Ímpar</option>
+    </select>
+
+    <label>Seu número (1 a 9):</label>
+    <input type="number" id="numUsuario" min="1" max="9" value="1">
+
+    <button onclick="jogar()">JOGAR!</button>
+
+    <div id="resultadoBox" class="resultado-box">
+        <p id="detalhes"></p>
+        <p id="veredito"></p>
+    </div>
+</div>
+
+<script>
+    // JS - Lógica do Jogo
+    function jogar() {
+        // Capturando valores
+        const escolha = document.getElementById('escolha').value;
+        const numUsuario = parseInt(document.getElementById('numUsuario').value);
+        const displayResultado = document.getElementById('resultadoBox');
+        const displayDetalhes = document.getElementById('detalhes');
+        const displayVeredito = document.getElementById('veredito');
+
+        // Validação simples
+        if (isNaN(numUsuario) || numUsuario < 1 || numUsuario > 9) {
+            alert("Por favor, escolha um número entre 1 e 9.");
+            return;
+        }
+
+        // 1. Gerar número aleatório do PC (1 a 9)
+        const numPC = Math.floor(Math.random() * 9) + 1;
+        
+        // 2. Calcular soma e resto
+        const soma = numUsuario + numPC;
+        const ePar = (soma % 2 === 0);
+        const resultadoTexto = ePar ? "PAR" : "ÍMPAR";
+
+        // 3. Verificar vencedor
+        let venceu = false;
+        if ((escolha === "par" && ePar) || (escolha === "impar" && !ePar)) {
+            venceu = true;
+        }
+
+        // 4. Mostrar na tela
+        displayResultado.style.display = "block";
+        displayDetalhes.innerHTML = `Você: <b>${numUsuario}</b> + PC: <b>${numPC}</b><br>Soma = <b>${soma}</b> (${resultadoTexto})`;
+
+        if (venceu) {
+            displayVeredito.innerHTML = "VOCÊ VENCEU! 🎉";
+            displayVeredito.className = "vitoria";
+        } else {
+            displayVeredito.innerHTML = "VOCÊ PERDEU! ❌";
+            displayVeredito.className = "derrota";
+        }
+    }
+</script>
+
+</body>
+</html>
